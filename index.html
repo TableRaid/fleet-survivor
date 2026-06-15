@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>FLEET SURVIVOR</title>
+    <style>
+      html, body { margin: 0; padding: 0; background: #05060a; overflow: hidden; height: 100%; }
+      #game { width: 100vw; height: 100vh; touch-action: none; }
+      * { -webkit-tap-highlight-color: transparent; user-select: none; }
+      /* 세로(포트레이트)일 때: 가로로 돌리라는 안내 오버레이 */
+      #rotate {
+        position: fixed; inset: 0; z-index: 9999; display: none;
+        background: #05060a; color: #9ad8ff; font-family: monospace; text-align: center;
+        align-items: center; justify-content: center; flex-direction: column; gap: 18px;
+      }
+      #rotate .icon { font-size: 64px; animation: spin 1.8s ease-in-out infinite; }
+      #rotate .t1 { font-size: 22px; color: #fff; }
+      #rotate .t2 { font-size: 15px; color: #6b7a90; }
+      @keyframes spin { 0%,40% { transform: rotate(0); } 60%,100% { transform: rotate(90deg); } }
+      @media (orientation: portrait) and (max-width: 920px) {
+        #rotate { display: flex; }
+        #game { visibility: hidden; }
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/main-ngMKwObO.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/Parallax-DOHf6-f3.js">
+  </head>
+  <body>
+    <div id="game"></div>
+    <div id="rotate">
+      <div class="icon">📱</div>
+      <div class="t1">화면을 가로로 돌려주세요</div>
+      <div class="t2">FLEET SURVIVOR · 가로 모드 전용</div>
+    </div>
+    <script>
+      // 첫 터치 때 가로 잠금 시도(지원 브라우저/풀스크린에서만 동작). 실패해도 무시.
+      function tryLandscape() {
+        try {
+          const el = document.documentElement;
+          if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+          if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {});
+        } catch (e) {}
+        window.removeEventListener('touchend', tryLandscape);
+        window.removeEventListener('click', tryLandscape);
+      }
+      window.addEventListener('touchend', tryLandscape, { once: false });
+      window.addEventListener('click', tryLandscape, { once: false });
+    </script>
+  </body>
+</html>
